@@ -1,29 +1,26 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import CommentList from './CommentList';
 
 export default class Article extends Component {
 
     constructor(props) {
-        super()
+        super();
         this.state = {
-            isOpen: false,
-            foo: 'bar'
+            isOpen: false
         }
     }
 
-/*
-    state = {
-        isOpen: false,
-        foo: 'bar'
-    }
-*/
-
     render() {
-        const { article } = this.props
-        const { isOpen } = this.state
-        console.log('---', this.state)
+        const { article } = this.props;
+        const { isOpen } = this.state;
 
-        const body = isOpen ? <section>{article.text}</section> : null
-        // <section style = {{display: isOpen ? 'block' : 'none'}}>{article.text}</section>
+        const body = isOpen ?
+            <section>
+                {article.text}
+                <CommentList comments = {article.comments} />
+            </section>
+            : null;
+
         return (
             <div>
                 <h3 onClick = {this.toggleOpen}>{article.title}</h3>
