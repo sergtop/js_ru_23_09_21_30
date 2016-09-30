@@ -9,7 +9,7 @@ export default class CommentList extends Component {
     render() {
         const { comments } = this.props;
         const { isOpenComments } = this.state;
-
+        //все хорошо, но я б в случае отсутствия комментов сразу вернул No comments и дальше б не шел и не делал доп проверок
         const triggerBtn = comments ? <button onClick={this.toggleCommentsOpen}>
             {isOpenComments ? 'Hide' : 'Show'} comments
         </button> : <strong>No comments</strong>;
