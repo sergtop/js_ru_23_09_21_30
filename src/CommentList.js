@@ -1,38 +1,21 @@
-import React, { Component } from 'react';
-import Comment from './Comment';
+import React, { Component, PropTypes } from 'react'
+import Comment from './Comment'
+import toggleOpen from './decorators/toggleOpen'
 
-export default class CommentList extends Component {
-    state = {
-        isOpenComments: false
-    };
+function CommentList(props) {
+    const { comments, isOpen, toggleOpen } = props
+    if (!comments || !comments.length) return <p>No comments yet</p>
 
-    render() {
-        const { comments } = this.props;
-        const { isOpenComments } = this.state;
-        //все хорошо, но я б в случае отсутствия комментов сразу вернул No comments и дальше б не шел и не делал доп проверок
-        const triggerBtn = comments ? <button onClick={this.toggleCommentsOpen}>
-            {isOpenComments ? 'Hide' : 'Show'} comments
-        </button> : <strong>No comments</strong>;
+    const commentItems = comments.map(comment => <li key={comment.id}><Comment comment={comment}/></li>)
+    const text = isOpen ? 'hide comments' : `show ${comments.length} comments`
+    const body = isOpen && <ul>{commentItems}</ul>
 
-        const commentComponents = (isOpenComments && comments) ? comments.map(comment => <li key={comment.id}><Comment comment = {comment}/></li>) : null;
-        const body =
-            <ul>
-                {commentComponents}
-            </ul>;
-
-
-        return (
-            <div>
-                {triggerBtn}
-                {body}
-            </div>
-        );
-    }
-
-    toggleCommentsOpen = ev => {
-        this.setState({
-            isOpenComments: !this.state.isOpenComments
-        })
-    };
-
+    return (
+        <div>
+            <a href="#" onClick={toggleOpen}>{text}</a>
+            {body}
+        </div>
+    )
 }
+
+export default toggleOpen(CommentList)

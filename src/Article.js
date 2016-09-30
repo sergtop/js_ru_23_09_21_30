@@ -1,29 +1,44 @@
-import React, { Component } from 'react';
-import CommentList from './CommentList';
+import React, { Component } from 'react'
+import CommentList from './CommentList'
 
 export default class Article extends Component {
+    static defaultProps = {
+
+    }
+    componentWillMount() {
+        console.log('---', 'mounting')
+    }
+
+    componentDidMount() {
+        console.log('---', 'mounted')
+    }
+
+    componentWillUnmount() {
+        console.log('---', 'unmounting')
+    }
 
     constructor(props) {
-        super();
+        super()
         this.state = {
-            isOpen: false
+            foo: 'bar'
         }
     }
 
+/*
+    state = {
+        isOpen: false,
+        foo: 'bar'
+    }
+*/
+
     render() {
-        const { article } = this.props;
-        const { isOpen } = this.state;
+        const { article, isOpen, openArticle } = this.props
 
-        const body = isOpen ?
-            <section>
-                {article.text}
-                <CommentList comments = {article.comments} />
-            </section>
-            : null;
-
+        const body = isOpen ? <section>{article.text}<CommentList comments = {article.comments} /></section> : null
+        // <section style = {{display: isOpen ? 'block' : 'none'}}>{article.text}</section>
         return (
             <div>
-                <h3 onClick = {this.toggleOpen}>{article.title}</h3>
+                <h3 onClick = {openArticle}>{article.title}</h3>
                 {body}
             </div>
         )
