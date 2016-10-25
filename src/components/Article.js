@@ -9,18 +9,37 @@ import { connect } from 'react-redux'
 
 class Article extends Component {
     static propTypes = {
-        article: PropTypes.object.isRequired,
-        isOpen: PropTypes.bool.isRequired,
-        openArticle: PropTypes.func.isRequired
+        article: PropTypes.object,
+        isOpen: PropTypes.bool,
+        openArticle: PropTypes.func
+    }
+
+    static contextTypes = {
+        router: PropTypes.object,
+        store: PropTypes.object,
+        username: PropTypes.string
     }
 
     componentWillReceiveProps(nextProps) {
-        const { isOpen, loadArticle, article: { id, text, loading } } = this.props
-        if (nextProps.isOpen && !isOpen && !text && !loading) loadArticle(id)
+        const { isOpen, loadArticle, article, id } = nextProps
+        if (!article) return loadArticle(id)
+
+        const { text, loading } = article
+        if (isOpen && !text && !loading) loadArticle(id)
+    }
+
+    componentDidMount() {
+        const { isOpen, loadArticle, article, id } = this.props
+        if (!article) return loadArticle(id)
+
+        const { text, loading } = article
+        if (isOpen && !text && !loading) loadArticle(id)
     }
 
     render() {
+        console.log('---', 'router: ', this.context)
         const { article, isOpen, openArticle } = this.props
+        if (!article) return null
 
         const loader = article.loading ? <Loader /> : null
         const body = isOpen ? <section>{loader}{article.text}<CommentList article = {article} ref = "commentList"/></section> : null
@@ -47,4 +66,6 @@ class Article extends Component {
     }
 }
 
-export default connect(null, { deleteArticle, loadArticle })(Article)
+export default connect((state, { id }) => ({
+    article: state.articles.getIn(['entities', id])
+}), { deleteArticle, loadArticle }, null, { pure: false })(Article)
